@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia de Economia – Viagem dos Sonhos para o RJ</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet" />
+
+  <!-- Base Styles -->
+  <style>
+    :root {
+      /* Paleta Brasil */
+      --green-1:#00c12c;
+      --green-2:#00b62d;
+      --green-3:#00be2e;
+      --green-4:#00c22c;
+      --yellow:#ffeb3b;
+      --blue:#0076ff;
+
+      --glass-bg:rgba(255,255,255,0.12);
+      --glass-border:rgba(255,255,255,0.25);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{width:100%;height:100%;scroll-behavior:smooth;font-family:'Poppins',sans-serif;color:#fff;}
+
+    body{
+      background:url('background1.png') center/cover fixed no-repeat;
+      overflow-x:hidden;
+    }
+
+    /* Loader -----------------------------------------------------*/
+    #loader{
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      background:var(--green-2);z-index:9999;
+      transition:opacity .6s ease, visibility .6s;
+    }
+    #loader.hidden{opacity:0;visibility:hidden;}
+    #loader svg{width:120px;height:120px;animation:spin 2s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* Navbar -----------------------------------------------------*/
+    .navbar{
+      position:sticky;top:0;z-index:100;font-weight:600;
+      display:flex;justify-content:space-between;align-items:center;
+      padding:1rem 2rem;background:var(--glass-bg);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--glass-border);
+    }
+    .navbar ul{display:flex;gap:1.5rem;list-style:none;}
+    .navbar a{color:#fff;text-decoration:none;position:relative;transition:color .3s;}
+    .navbar a::after{
+      content:'';position:absolute;left:0;bottom:-4px;width:0;height:2px;
+      background:var(--yellow);transition:width .3s ease;
+    }
+    .navbar a:hover{color:var(--yellow);}
+    .navbar a:hover::after{width:100%;}
+
+    /* Hero -------------------------------------------------------*/
+    .hero{
+      min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+      text-align:center;padding:0 1rem;
+    }
+    .hero h1{font-size:clamp(2.2rem,6vw,4rem);line-height:1.1;margin-bottom:1rem;font-weight:700;}
+    .hero p{font-size:1.1rem;max-width:600px;}
+
+    /* Sections ---------------------------------------------------*/
+    section{padding:4rem 2rem;}
+    .section-title{
+      font-size:1.8rem;font-weight:600;margin-bottom:2.5rem;
+      background:linear-gradient(60deg,var(--yellow),var(--green-1));-webkit-background-clip:text;color:transparent;
+    }
+
+    /* Cards / Glassmorphism -------------------------------------*/
+    .cards-wrapper{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;
+    }
+    .card{
+      background:var(--glass-bg);border:1px solid var(--glass-border);
+      border-radius:1.25rem;padding:2rem;backdrop-filter:blur(14px);
+      box-shadow:0 6px 18px rgba(0,0,0,.25);
+      transition:transform .4s ease, box-shadow .4s ease;
+      cursor:pointer;
+    }
+    .card:hover{
+      transform:translateY(-10px) scale(1.04);
+      box-shadow:0 12px 24px rgba(0,0,0,.35);
+    }
+    .card h3{font-size:1.4rem;margin-bottom:.8rem;color:var(--yellow);}
+    .card ul{margin-left:1rem;list-style:disc;}
+    .card li{margin-bottom:.4rem;font-size:.92rem;}
+
+    /* Horizontal Scroll (Snapping) ------------------------------*/
+    .horizontal-scroll{
+      overflow-x:auto;padding-bottom:1rem;
+      scroll-snap-type:x mandatory;display:flex;gap:2rem;
+    }
+    .hs-item{
+      flex:0 0 80%;scroll-snap-align:center;
+      background:var(--glass-bg);border:1px solid var(--glass-border);
+      border-radius:1.25rem;padding:2rem;backdrop-filter:blur(14px);
+    }
+
+    /* Simulation Table ------------------------------------------*/
+    .table{
+      width:100%;border-collapse:collapse;border-radius:1rem;overflow:hidden;
+      background:var(--glass-bg);backdrop-filter:blur(14px);
+    }
+    .table th,.table td{padding:1rem;text-align:center;border-bottom:1px solid var(--glass-border);}
+    .table th{background:var(--green-4);}
+    .table tbody tr:nth-child(even){background:rgba(255,255,255,0.05);}
+    @media (max-width:680px){
+      .table thead{display:none;}
+      .table, .table tbody, .table tr, .table td{display:block;width:100%;}
+      .table tr{margin-bottom:1rem;}
+      .table td{padding:1rem .5rem;text-align:right;position:relative;}
+      .table td::before{
+        content:attr(data-label);position:absolute;left:0;top:50%;transform:translateY(-50%);
+        font-weight:600;text-transform:uppercase;
+      }
+    }
+
+    /* Footer -----------------------------------------------------*/
+    footer{text-align:center;padding:3rem 1rem;font-size:.85rem;background:rgba(0,0,0,.2);}
+  </style>
+</head>
+<body>
+
+<!-- Imagem de abertura -->
+<div style="text-align:center; margin-top:20px;">
+  <img src="imagemrio.png" alt="Rio de Janeiro" style="max-width:100%; height:auto;" data-aos="zoom-in" />
+</div>
+
+  <!-- Loader -->
+  <div id="loader">
+    <svg viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="50" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="0">
+        <animate attributeName="stroke-dashoffset" dur="2s" repeatCount="indefinite" from="0" to="-314"/>
+      </circle>
+    </svg>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" data-aos="fade-down">
+    <div class="logo">ishinN Rio</div>
+    <ul>
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#tabela">Tabela Guia</a></li>
+      <li><a href="#simulacao">Simulação</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero parallax" id="inicio" data-depth="0.3">
+    <h1 data-aos="fade-up">Guia de Economia<br/>para sua Próxima Viagem ao Rio de Janeiro</h1>
+    <p data-aos="fade-up" data-aos-delay="150">
+      Estratégias profissionais de Economia, Contabilidade e Atuária para você reservar o valor necessário e viver
+      o melhor do RJ em 12 meses — de forma leve, organizada e inteligente.
+    </p>
+  </section>
+
+  <!-- Tabela Guia ------------------------------------------------------------------>
+  <section id="tabela">
+    <h2 class="section-title" data-aos="fade-right">Tabela Guia – Planos por Faixa de Renda</h2>
+
+    <!-- Cards -->
+    <div class="cards-wrapper">
+      <!-- Faixa 1 -->
+      <div class="card" data-aos="zoom-in">
+        <h3>Renda&nbsp;R$ 1 000 – 2 500</h3>
+        <ul>
+          <li><b>60 %</b> Despesas essenciais (moradia, alimentação, transporte)</li>
+          <li><b>25 %</b> Despesas variáveis controladas (lazer, imprevistos)</li>
+          <li><b>15 %</b> Poupança para a viagem em <abbr title="Certificado de Depósito Bancário">CDB</abbr> de liquidez diária</li>
+          <li>Zero‑based budget e método envelope para separar a “Caixinha RJ”</li>
+          <li>Renegocie dívidas de alto custo; evite parcelamentos acima de 3x</li>
+        </ul>
+      </div>
+
+      <!-- Faixa 2 -->
+      <div class="card" data-aos="zoom-in" data-aos-delay="100">
+        <h3>Renda&nbsp;R$ 2 500 – 4 000</h3>
+        <ul>
+          <li><b>55 %</b> Despesas essenciais</li>
+          <li><b>25 %</b> Variáveis (educação, lazer consciente)</li>
+          <li><b>20 %</b> Investimentos (<abbr title="Tesouro Direto">Tesouro Selic</abbr> + CDB 110 % CDI)</li>
+          <li>Alerta de passagens para comprar 6 meses antes (economia de até 30 %)</li>
+          <li>Transferência automática para investimentos no dia pós‑salário</li>
+        </ul>
+      </div>
+
+      <!-- Faixa 3 -->
+      <div class="card" data-aos="zoom-in" data-aos-delay="200">
+        <h3>Renda&nbsp;R$ 4 000 – 6 000</h3>
+        <ul>
+          <li><b>50 %</b> Despesas essenciais</li>
+          <li><b>20 %</b> Variáveis premium (experiências > bens)</li>
+          <li><b>30 %</b> Investimento escalonado (Tesouro IPCA +, Selic e CDB 120 % CDI)</li>
+          <li>Cartão de crédito com pontos para converter em milhas</li>
+          <li>Metas SMART: hospedagem, alimentação e transportes pré‑custeados</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Horizontal Scroll Roadmap ------------------------------------------------------>
+  <section>
+    <h2 class="section-title" data-aos="fade-right">Roadmap de 12 Meses</h2>
+    <div class="horizontal-scroll" id="roadmap">
+      <div class="hs-item" data-aos="fade-left">
+        <h3>Mês 1 – Diagnóstico</h3>
+        <p>Levantamento de despesas, cálculo de poupança necessária (meta ≈ R$ 3&nbsp;000 a R$ 18 000 dep. da renda).</p>
+      </div>
+      <div class="hs-item" data-aos="fade-left" data-aos-delay="100">
+        <h3>Mês 4 – Automação</h3>
+        <p>Débito automático para investimento; ajustes no orçamento base‑zero.</p>
+      </div>
+      <div class="hs-item" data-aos="fade-left" data-aos-delay="200">
+        <h3>Mês 8 – Compra de Passagens</h3>
+        <p>Monitoramento com <em>price alerts</em>; uso inteligente de milhas.</p>
+      </div>
+      <div class="hs-item" data-aos="fade-left" data-aos-delay="300">
+        <h3>Mês 12 – Reserva Fechada</h3>
+        <p>Check‑list final: hospedagem, seguro‑viagem, roteiros e câmbio.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulação --------------------------------------------------------------------->
+  <section id="simulacao">
+    <h2 class="section-title" data-aos="fade-right">Simulação de Acumulação de Capital (12 meses)</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Faixa de Renda</th>
+          <th>Investimento&nbsp;Mensal</th>
+          <th>Saldo em 12 meses<small>†</small></th>
+          <th>Objetivo de Viagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Faixa">R$ 1 000 – 2 500</td>
+          <td data-label="Mensal">R$ 300</td>
+          <td data-label="Saldo" id="saldo1">—</td>
+          <td data-label="Objetivo">R$ 3 500 (4 dias)</td>
+        </tr>
+        <tr>
+          <td data-label="Faixa">R$ 2 500 – 4 000</td>
+          <td data-label="Mensal">R$ 650</td>
+          <td data-label="Saldo" id="saldo2">—</td>
+          <td data-label="Objetivo">R$ 8 000 (7 dias)</td>
+        </tr>
+        <tr>
+          <td data-label="Faixa">R$ 4 000 – 6 000</td>
+          <td data-label="Mensal">R$ 1 500</td>
+          <td data-label="Saldo" id="saldo3">—</td>
+          <td data-label="Objetivo">R$ 20 000 (10 dias premium)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:.8rem;margin-top:.6rem;">† Projeção com rendimento médio Selic ≈ 0,8 % a.m.; capitalização composta.</p>
+  </section>
+
+  <footer>
+    © 2025 ishinN Rio – Todas as dicas com base em boas práticas de Educação Financeira, Contabilidade Gerencial e Atuária.<br/>
+    Consulte um profissional antes de tomar decisões de investimento.
+	
+	<section id="contato" style="padding:4rem 2rem; text-align:center;">
+  <h2 class="section-title" data-aos="fade-up">Receba um Guia 100% Personalizado</h2>
+  <p style="margin-bottom:2rem; max-width:700px; margin-inline:auto;" data-aos="fade-up" data-aos-delay="100">
+    Envie sua <strong>renda média</strong>, seu <strong>email</strong>, quantos dias deseja aproveitar, 
+    <strong>qual o seu destino dos sonhos</strong> e <strong>em que mês pretende viajar</strong>. 
+    Em até 48h, enviaremos um guia exclusivo e estratégico para você alcançar sua viagem dos sonhos!
+  </p>
+
+  <form id="formGuia" action="https://formsubmit.co/ajax/contacthiddenrio@gmail.com" method="POST" data-aos="fade-up" data-aos-delay="200" style="max-width:600px;margin:auto;">
+    <textarea  name="mensagem" placeholder="Escreva aqui suas respostas..." required rows="6" style="width:100%;padding:1rem;border-radius:12px;border:none;background:rgba(255,255,255,0.12);color:white;"></textarea>
+	<input type="hidden" name="_subject" value="Guia personalizado – ishinN Rio">
+    <br/><br/>
+    <input type="email" name="email" placeholder="Seu melhor e-mail" required style="width:100%;padding:1rem;border-radius:12px;border:none;margin-top:10px;background:rgba(255,255,255,0.12);color:white;">
+    <br/><br/>
+    <button type="submit" style="background:var(--yellow);color:black;padding:1rem 2rem;border:none;border-radius:12px;cursor:pointer;font-weight:600;">
+      Receber Meu Guia Personalizado
+    </button>
+    <p id="formMsg" style="margin-top:1rem;"></p>
+  </form>
+</section>
+
+  </footer>
+
+  <!-- Libraries & Scripts ----------------------------------------------------------->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+    /* Loader hide */
+    window.addEventListener('load',()=>document.getElementById('loader').classList.add('hidden'));
+
+    /* AOS init */
+    AOS.init({once:true,duration:800,easing:'ease-out'});
+
+    /* VanillaTilt */
+    VanillaTilt.init(document.querySelectorAll('.card, .hs-item'),{
+      max:15,speed:400,glare:true,"max-glare":.3
+    });
+
+    /* GSAP Parallax hero */
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.from('.hero h1',{y:60,opacity:0,duration:1});
+    gsap.from('.hero p',{y:60,opacity:0,duration:1,delay:.2});
+
+    /* Parallax layers (if more layers are added) */
+    gsap.utils.toArray('.parallax').forEach(layer=>{
+      gsap.to(layer,{yPercent:20*layer.dataset.depth,ease:'none',
+        scrollTrigger:{trigger:layer,start:'top bottom',scrub:true}});
+    });
+
+    /* Future‑value simulation ------------------------*/
+	 // Envio AJAX limpo
+  document.getElementById('formGuia').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const resposta = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const msg = document.getElementById('formMsg');
+    if (resposta.ok) {
+      msg.textContent = '✅ Guia enviado com sucesso! Verifique seu e‑mail.';
+      form.reset();
+    } else {
+      msg.textContent = '❌ Ocorreu um erro. Tente novamente.';
+    }
+  });
+  
+    function fv(pmt,r,n){
+      return pmt*((Math.pow(1+r,n)-1)/r);
+    }
+    const r=0.008; //aprox. 0,8 % a.m.
+    const data=[
+      {el:'#saldo1',pmt:300},
+      {el:'#saldo2',pmt:650},
+      {el:'#saldo3',pmt:1500}
+    ];
+    data.forEach(d=>{
+      const total=fv(d.pmt,r,12).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+      document.querySelector(d.el).textContent=total;
+    });
+	
+  document.getElementById('formGuia').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const response = await fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    const msg = document.getElementById('formMsg');
+    if (response.ok) {
+      msg.innerText = "✅ Guia enviado com sucesso! Verifique seu e-mail.";
+      form.reset();
+    } else {
+      msg.innerText = "❌ Ocorreu um erro. Tente novamente.";
+    }
+  });
+
+  window.addEventListener("load", function () {
+    const loader = document.getElementById("loader");
+    loader.classList.add("hidden");
+  });
+  
+  document.getElementById('formGuia').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const msg = document.getElementById('formMsg');
+    
+    msg.textContent = 'Enviando...';
+
+    const formData = new FormData(form);
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        msg.style.color = 'lightgreen';
+        msg.textContent = 'Guia enviado com sucesso! Confira seu email nas próximas 48 horas.';
+        form.reset();
+      } else {
+        throw new Error('Erro no envio');
+      }
+    } catch (err) {
+      msg.style.color = 'salmon';
+      msg.textContent = 'Ocorreu um erro. Tente novamente mais tarde.';
+    }
+  });
+</script>
+</body>
+</html>
+
+
